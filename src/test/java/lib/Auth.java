@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 public class Auth {
 
-    @Test
-    public void getSession()
+
+    public String getSession(String login, String password)
     {
         Map<String, String> params = new HashMap<>();
-        params.put("log", "9160058830");
-        params.put("pwd", "Dd17549bb");
+        params.put("log", login);
+        params.put("pwd", password);
 
         Response responseGetAuth = RestAssured
                 .given()
@@ -23,29 +23,7 @@ public class Auth {
                 .contentType(ContentType.JSON)
                 .post("https://idev.etm.ru/api/ipro/user/login")
                 .andReturn();
-       // String sessionId = responseGetAuth.jsonPath().getString("data.session");
-
-
-
-        String authCoockie = responseGetAuth.getCookie("session-id");
-        Map<String, String> cookies = new HashMap<>();
-        cookies.put("session-id", authCoockie);
-
-        Response responseForCheck = RestAssured
-                .given()
-                .queryParams(params)
-                .cookies(cookies)
-                .when()
-                .post("https://idev.etm.ru/api/ipro/user/login")
-                .andReturn();
-
-        responseGetAuth.prettyPrint();
+       String sessionId = responseGetAuth.jsonPath().getString("data.session");
+       return sessionId;
     }
-
-    public void authCookie() {
-
-    }
-
-
-
 }
